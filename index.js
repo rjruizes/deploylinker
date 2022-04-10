@@ -1,21 +1,19 @@
+
+const basePath = ""
+
 /**
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Probot} app
  */
-module.exports = (app) => {
-  // Your code here
-  app.log.info("Yay, the app was loaded!");
+module.exports = (robot) => {
+  robot.on("pull_requests.opened", async (context) => {
+    const branchName = context.payload.pull_request.head.ref;
 
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue!",
+    // create a comment
+    const comment = context.pull_request({
+      body: basePath + branchName,
     });
-    return context.octokit.issues.createComment(issueComment);
+    // publish it
+    return context.github.pull_requests.createComment(comment);
   });
-
-  // For more information on building apps:
-  // https://probot.github.io/docs/
-
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
 };
