@@ -1,0 +1,21 @@
+name: PR Opened
+
+on:
+  pull_request:
+    types: [ opened ]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: PR Comment
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: ${{ github.event.number }},
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '[Demo Link](https://google.com/${{ github.event.pull_request.head.ref }}).'
+          })
